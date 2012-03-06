@@ -197,7 +197,7 @@ __Summary__
 
 ###Store.Transaction
 
-_Summary_
+__Summary__
 		
 		一个 transaction 方法返回的对象,表示一事务操作
 
@@ -205,7 +205,7 @@ _Summary_
 
 ####commit（）
 
-_Summary_
+__Summary__
 
 		执行一个事务，事务提交失败可能抛出一个错误；在异步模式下会返回一个promise，最终会返回事务执行成功或失败
 		
@@ -214,7 +214,7 @@ _Summary_
 
 ####abort(callback, thisObject)
 
-_Summary_
+__Summary__
 
 		终止一个事务，终止操作失败可能抛出一个错误；在异步模式下会返回一个promise，最终会返回终止操作的成功或失败
  
@@ -224,52 +224,53 @@ _Summary_
 
 ###idProperty 
 
-_Summary_
-
-<a name="quertEngine" />
-###quertEngine
-
-_Summary_
+__Summary__
+		如果Store对象具有主见，则表示该属性值是记录的身份标识，记录的该属性值必须唯一 
 
 <a name="transaction" />
 ###transaction
 
-_Summary_
+__Summary__
 
 ##对象方法
+
+<a name="quertEngine" />
+###quertEngine
+
+__Summary__
 
 <a name="get" />
 ###get
 
-_Summary_
+__Summary__
 
 <a name="getIdentity" />
 ###getIdentity
 
-_Summary_
+__Summary__
 
 
 <a name="put" />
 ###put
 
-_Summary_
+__Summary__
 
 <a name="add" /> 
 ###add
 
-_Summary_
+__Summary__
 
 <a name="remove" />
 ###remove
 
-_Summary_
+__Summary__
 
 <a name="getChildren" />
 ###getChildren
 
-_Summary_
+__Summary__
 
 <a name="getMetadata" />
 ###getMetadata
 
-_Summary_ 
+__Summary__
