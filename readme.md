@@ -225,52 +225,150 @@ __Summary__
 ###idProperty 
 
 __Summary__
-		如果Store对象具有主见，则表示该属性值是记录的身份标识，记录的该属性值必须唯一 
-
-<a name="transaction" />
-###transaction
-
-__Summary__
-
+		
+		如果Store对象具有主见，则表示该属性值是记录的身份标识，记录的该属性值必须唯一 ，Store会根据该属性创建索引
+		
+		
 ##对象方法
+
 
 <a name="quertEngine" />
 ###quertEngine
 
 __Summary__
 
+		对Store进行查询的函数/方法，并返回一个结果集合，该方法可以进行替换  
+		该方法存在两个参数，第一个为Query Params ，第二关参数为 option 如排序分页等  
+		该方法返回一个匹配的数组。 		
+		var query =QueryEngin(query,option)
+__Arguments__
+
+		query Params {Object} 要查询的条件，查询格式{ name:"*/habq/hik",age:{val:16,condition:">"},city:"shanghai"} 
+		option	{Object?}  排序，查询记录数等信息
+		
+		
+
 <a name="get" />
-###get
+###get(id)
 
 __Summary__
+			
+		根据Identity返回一个记录对象
+		
+__Arguments__
+		
+		id {String|Number} Store 记录的 Identitiy
+		
+		returns { Object} 返回一个记录对象
 
 <a name="getIdentity" />
-###getIdentity
+###getIdentity(object)
 
 __Summary__
 
+		根据一个记录对象返回该记录的Identity
 
+__Arguments__
+
+		object {Obejct} 要查询的Item对象
+		
+		returns{String|Number}发挥记录对象的Identity
+		
+	
 <a name="put" />
-###put
+###put(object,directives)
 
 __Summary__
 
+		存入Stores 的记录对象
+
+__Arguments__
+
+		object{object} 要存入度对象
+		 
+		directives{Store.PutDirectives}  put 更新制冷对象
+		 
+		returns: {Number|String} 
+		
 <a name="add" /> 
-###add
+###add(object,directives)
 
 __Summary__
+
+		存入Stores 的记录对象 ，如果该对象存在，则抛出一个错误
+
+__Arguments__
+
+		object{object} 要存入度对象
+		 
+		directives{Store.PutDirectives}  put 更新制冷对象
+		 
+		returns: {Number|String} 
 
 <a name="remove" />
-###remove
+###remove(id)
 
 __Summary__
 
+		根据identity 删除Store内地一个记录，该方法会删除记录及Store的索引
+		
+__Arguments__
+
+		id {Number|String} 要删除的记录的Identity
+		
+<a name="query" />
+
+#query(query,options)
+
+__Summary__
+				
+		查询对象内的记录，但给对象不会给改变，返回查询记录的集合
+__Arguments__
+
+		query{String|Object|Function} 从Store内进行搜索使用
+		
+		options{Store.QueryOptions} 可选参数，用于查询结果集的处理
+		
+		returns{Store.QueryResults} 查询的结果集合，并扩展了一些方法
+__Example__
+
+		//		给定一个存在的store
+		//
+		//	...查找所有属性 primes 为 true的items :
+		//
+		store.query({ prime: true }).forEach(function(object){
+				// handle each object
+		});
 <a name="getChildren" />
-###getChildren
-
+###getChildren(parent, options)
+	
 __Summary__
 
+		获取一个对象的子元素
+		
+__Arguments__
+
+		parent{object} 要查找的子对象所对应的父对象
+		
+		options {Stroe.QueryOptions} 可选参数，用于对资源是的查询
+		
+		returns {Store.QueryResults} 查询到的子对象的结果集
+		
 <a name="getMetadata" />
-###getMetadata
+###getMetadata(object)
 
 __Summary__
+
+	返回对象的原始数据
+	
+__Arguments__
+
+		object {object} 要返回的原始数据对象
+ 
+<a name="transaction" />
+
+###transaction()
+	
+ __Summary__
+ 
+		创建一个新的事务，并返回一个 Store.Transaction 对象
