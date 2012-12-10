@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Jquerystore by leoyin</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Jquerystore</h1>
+        <h2></h2>
+        <a href="https://github.com/leoyin/jQueryStore" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>JQueryStore</h1>
+
+<p>定义jQuery的数据存储统一对象，最初是为解决在Domino环境下 Readviewentires URL命令返回的DXL格式数据，后来参考Dojo的Store 设计重新对Store对象进行了定义，抽出Store API。扩展Memory / LocalStore/DXLStore等对象。</p>
+
+<p>微博 <a href="http://weibo.com/ivy203">http://weibo.com/ivy203</a></p>
+
+<h2>StoreAPI</h2>
+
+<p>对DojoStoreAPI进行的移植  </p>
+
+<h3>类成员</h3>
+
+<ul>
+<li>
+<a href="#Store.PutDirectives">PutDirectives</a><br>
+</li>
+<li>
+<a href="#Store.SortInformation">SortInformation</a><br>
+</li>
+<li>
+<a href="#Store.QueryOptions">QueryOptions</a><br>
+</li>
+<li>
+<a href="#Store.QueryResults">QueryResults</a><br><ul>
+<li>
+<a href="#Store.QueryResults.forEach">forEach/each</a><br>
+</li>
+<li><a href="#Store.QueryResults.filter">filter/grep</a></li>
+<li><a href="#Store.QueryResults.map">map</a></li>
+<li><a href="#Store.QueryResults.then">then</a></li>
+<li><a href="#Store.QueryResults.observer">observe</a></li>
+<li><a href="#Store.QueryResults.total">total</a></li>
+</ul>
+</li>
+<li>
+<a href="#Store.Transaction">Transaction</a><br><ul>
+<li>
+<a href="#Store.Transaction.commit">commit</a><br>
+</li>
+<li>
+<a href="#Store.Transaction.abort">abort</a><br>
+</li>
+</ul>
+</li>
+</ul><h3>对象成员</h3>
+
+<ul>
+<li>
+<a href="#idProperty">idProperty</a><br>
+</li>
+<li>
+<a href="#queryEngine">queryEngine</a><br>
+</li>
+<li>
+<a href="#get">get</a><br>
+</li>
+<li>
+<a href="#getIdentity">getIdentity</a><br>
+</li>
+<li>
+<a href="#put">put</a><br>
+</li>
+<li>
+<a href="#add">add</a><br>
+</li>
+<li>
+<a href="#remove">remove</a><br>
+</li>
+<li>
+<a href="#query">query</a><br>
+</li>
+<li>
+<a href="#transaction">transaction</a> </li>
+<li>
+<a href="#getChildren">getChildren</a> </li>
+<li>
+<a href="#getMetadata">getMetadata</a> </li>
+</ul><h2>类方法</h2>
+
+<p><a name="Store.PutDirectives"></a></p>
+
+<h3>Store.PutDirectives(id,before,parent,overwrite)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    将指令传递给  put() 和 add() ，以更新这两个操作对对象内容的更新和创建 
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    id  {String|Number} 如果创建一个新的Store对象，则为对象的id  
+    before {Object?}  如果存在该对象，则表示将新的对象添加到改对象之前，为null则将新添加对象追加到最后  
+    parent {Object?}  在分层存储时，该对象表示要更新的对象的父对象  
+    overwrite {Boolean?}  表示是否更新对象，如果为true，则如果对象存在，则更新对，为false则表示无论创建一个新对象。这个方法错误add()的补充
+</code></pre>
+
+<hr><p><a name="Store.SortInformation"></a></p>
+
+<h3>Store.SortInformation(attribute, descending)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    对象排序属性的方式（指定的属性 attribute排序方式）
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>     attribute {String} 排序属性名称.   
+     descending { Boolean}排序方法，缺省为 flase  
+</code></pre>
+
+<hr><p><a name="Store.QueryOptions"></a></p>
+
+<h3>Store.QueryOptions(sort,start,count)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    用于设置默认查询参数
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    sort {Store.SortInformation[]?} 设置排序方式对象数组  
+    start {Numnber?}  返回记录集和开始处的指针  
+    count {count ?} 返回记录集和长度   
+</code></pre>
+
+<hr><p><a name="Store.QueryResults"></a></p>
+
+<h3>Store.QueryResults</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    Store查询返回的记录集，在处理具有延迟调查询时，可以返回一个Promise(参考jQuery.Deferred)。
+    在使用过程中，用户不用担心异步处理以及延迟带来的问题
+</code></pre>
+
+<p><a href="http://api.jquery.com/category/deferred-object/">jQuery.Deferred</a>  </p>
+
+<p><a name="Store.QueryResults.forEach"></a></p>
+
+<h4>forEach/each(calllback,thisObject)</h4>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    遍历集和，如有是一个promise，则在对象返回后执行遍历.
+    此处使用each方法和forEach是方便jQuery开发习惯
+    参考：https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/forEach
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    callback {function} 对每一个元素进行处理的方法
+
+
+    thisObject (object?) callback内作为this使用的对象
+</code></pre>
+
+<p><a name="Store.QueryResults.filter"></a></p>
+
+<h4>filter/grep(calllback,thisObject)</h4>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>     对返回结果继续条件过滤
+     grep是考虑jQuery开发习惯，建议使用 filter 
+     参考： https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/filter.
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    callback {function} 对每一个元素进行处理的方法，返回true表示保留此元素，返回false表示过滤此元素
+
+
+    thisObject (object?) callback内作为this使用的对象        
+</code></pre>
+
+<p><a name="Store.QueryResults.map"></a></p>
+
+<h4>map(calllback,thisObject)</h4>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>     参考： https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map.
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    callback {function} 对每一个元素进行处理的方法，返回true表示保留此元素，返回false表示过滤此元素
+
+
+    thisObject (object?) callback内作为this使用的对象       
+</code></pre>
+
+<p><a name="Store.QueryResults.then"></a></p>
+
+<h4>then(callback,errorHandler)</h4>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>     Promise 返回后执行
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    callback {function} 要执行的函数  
+
+    errorHandler (object?) callback内作为this使用的对象     
+</code></pre>
+
+<p><a name="Store.QueryResults.observe"></a></p>
+
+<h4>observe(listener, includeAllUpdates)</h4>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    注册一个查询结果修改的事件（观察者模式）
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    listerner {Function} 当查询结构进行修改时该函数被调用，具体参考listerner函数的书面  
+    includeAllUpdates {Boolean ?} 表示是否对结果集产生影响，默认为false，既修改不会对结果集和数据顺序等产生任何用心。
+</code></pre>
+
+<h5>listener(object, removedFrom, insertedInto)</h5>
+
+<pre><code>    object {object} 被修改（创建，修改，删除）的对象参数
+    removedFrom {Number} object 在结果数组的索引. 如果值是-1，对象不再这个结果集和内
+    insertedInto {Number} object 现在在结果数组的索引. 如果值是-1，那么是一个从集和内移除的对象
+</code></pre>
+
+<p><a name="Store.QueryResults.total"></a></p>
+
+<h4>total</h4>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    返回一个Number 或者 Promise
+</code></pre>
+
+<hr><p><a name="Store.Transaction"></a></p>
+
+<h3>Store.Transaction</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    一个 transaction 方法返回的对象,表示一事务操作
+</code></pre>
+
+<p><a name="Store.Transaction.commit"></a></p>
+
+<h4>commit（）</h4>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    执行一个事务，事务提交失败可能抛出一个错误；在异步模式下会返回一个promise，最终会返回事务执行成功或失败
+</code></pre>
+
+<p><a name="Store.Transaction.abort"></a></p>
+
+<h4>abort(callback, thisObject)</h4>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    终止一个事务，终止操作失败可能抛出一个错误；在异步模式下会返回一个promise，最终会返回终止操作的成功或失败
+</code></pre>
+
+<h2>对象属性</h2>
+
+<p><a name="idProperty"></a></p>
+
+<h3>idProperty</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    如果Store对象具有主见，则表示该属性值是记录的身份标识，记录的该属性值必须唯一 ，Store会根据该属性创建索引
+</code></pre>
+
+<h2>对象方法</h2>
+
+<p><a name="quertEngine"></a></p>
+
+<h3>quertEngine</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    对Store进行查询的函数/方法，并返回一个结果集合，该方法可以进行替换  
+    该方法存在两个参数，第一个为Query Params ，第二关参数为 option 如排序分页等  
+    该方法返回一个匹配的数组。         
+    var query =QueryEngin(query,option)
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    query Params {Object} 要查询的条件，查询格式{ name:"*/habq/hik",age:{val:16,condition:"&gt;"},city:"shanghai"} 
+    option  {Object?}  排序，查询记录数等信息
+</code></pre>
+
+<p><a name="get"></a></p>
+
+<h3>get(id)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    根据Identity返回一个记录对象
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    id {String|Number} Store 记录的 Identitiy
+
+    returns { Object} 返回一个记录对象
+</code></pre>
+
+<p><a name="getIdentity"></a></p>
+
+<h3>getIdentity(object)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    根据一个记录对象返回该记录的Identity
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    object {Obejct} 要查询的Item对象
+
+    returns{String|Number}发挥记录对象的Identity
+</code></pre>
+
+<p><a name="put"></a></p>
+
+<h3>put(object,directives)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    存入Stores 的记录对象
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    object{object} 要存入度对象
+
+    directives{Store.PutDirectives}  put 更新制冷对象
+
+    returns: {Number|String} 
+</code></pre>
+
+<p><a name="add"></a> </p>
+
+<h3>add(object,directives)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    存入Stores 的记录对象 ，如果该对象存在，则抛出一个错误
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    object{object} 要存入度对象
+
+    directives{Store.PutDirectives}  put 更新制冷对象
+
+    returns: {Number|String} 
+</code></pre>
+
+<p><a name="remove"></a></p>
+
+<h3>remove(id)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    根据identity 删除Store内地一个记录，该方法会删除记录及Store的索引
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    id {Number|String} 要删除的记录的Identity
+</code></pre>
+
+<p><a name="query"></a></p>
+
+<h1>query(query,options)</h1>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    查询对象内的记录，但给对象不会给改变，返回查询记录的集合
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    query{String|Object|Function} 从Store内进行搜索使用
+
+    options{Store.QueryOptions} 可选参数，用于查询结果集的处理
+
+    returns{Store.QueryResults} 查询的结果集合，并扩展了一些方法
+</code></pre>
+
+<p><strong>Example</strong></p>
+
+<pre><code>    //      给定一个存在的store
+    //
+    //  ...查找所有属性 primes 为 true的items :
+    //
+    store.query({ prime: true }).forEach(function(object){
+            // handle each object
+    });
+</code></pre>
+
+<p><a name="getChildren"></a></p>
+
+<h3>getChildren(parent, options)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    获取一个对象的子元素
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    parent{object} 要查找的子对象所对应的父对象
+
+    options {Stroe.QueryOptions} 可选参数，用于对资源是的查询
+
+    returns {Store.QueryResults} 查询到的子对象的结果集
+</code></pre>
+
+<p><a name="getMetadata"></a></p>
+
+<h3>getMetadata(object)</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>返回对象的原始数据
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+
+<pre><code>    object {object} 要返回的原始数据对象
+</code></pre>
+
+<p><a name="transaction"></a></p>
+
+<h3>transaction()</h3>
+
+<p><strong>Summary</strong></p>
+
+<pre><code>    创建一个新的事务，并返回一个 Store.Transaction 对象
+</code></pre>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/leoyin/jQueryStore/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/leoyin/jQueryStore/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/leoyin/jQueryStore"></a> is maintained by <a href="https://github.com/leoyin">leoyin</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
